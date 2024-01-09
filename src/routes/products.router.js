@@ -17,7 +17,7 @@ const manager = new ProductManager("./src/models/productos.json")
 router.get("/", async (req, res)=>{
     try {
         //Cargamos el array de productos
-        const arrayProductos = await manager.readProducts();
+        const arrayProductos = await manager.readProducts()
 
         //Guardamos el query
         let limit = parseInt(req.query.limit);
@@ -30,8 +30,7 @@ router.get("/", async (req, res)=>{
             return res.send(arrayProductos)
         }
     } catch (error) {
-        console.log(error);
-        return res.send('Error al procesar la solicitud')
+        return res.send(`Error al mostrar los productos. Error: ${error}`)
     }
 })
 
@@ -47,13 +46,13 @@ router.get("/:pid", async (req, res)=>{
         if(prod){
             return res.send(prod)
         }else{
-            return res.send("ID del producto incorrecto.")
+            return res.send(`El ID:${pid} del producto es incorrecto.`)
         }
     }catch(error){
-        console.log(error);
-        return res.send('Error al procesar la solicitud')
+        return res.send(`Error al mostrar el producto de ID ${pid}. Error (${error})`)
     }
 })
+
 
 
 /* ----------------------------------------POST----------------------------------------------- */
@@ -74,10 +73,9 @@ router.post("/", async (req, res)=>{
 
         //agrego el producto (Con ID auto generado)
         await manager.addProduct(newProduct)
-        return res.send('Producto agregado')
+            .then((resp)=> res.send (resp))
     } catch (error) {
-        console.log(error);
-        return res.send('Error al procesar la solicitud')
+        return res.send(`Error al cargar el nuevo producto. Error: ${error}`)
     }
 })
 
@@ -102,11 +100,11 @@ router.put("/:pid", async (req, res)=>{
         }
 
         //actualizo el producto (sin actualizar ID)
-        await manager.updateProduct(pid, newProduct)
-        return res.send('Producto actualizado')
+        const resp = await manager.updateProduct(pid, newProduct)
+        res.send(resp)
+        
     } catch (error) {
-        console.log(error);
-        return res.send('Error al actualizar el producto')
+        res.send(`Error al actualizar el producto. ERROR ${error}`)
     }
 })
 
@@ -116,12 +114,11 @@ router.delete("/:pid", async (req, res)=>{
     try {
         //Me guardo el id 
         let pid = parseInt(req.params.pid)
-        await manager.deleteProduct(pid)
-        return res.send(`Producto de id ${pid} borrado con exito!!`)
+        const resp = await manager.deleteProduct(pid).then(res => res)
+        return res.send(resp)
 
     }catch(error){
-        console.log(error);
-        return res.send('Error al eliminar el producto')
+        return res.send(`Error al eliminar el producto. ERROR ${error}`)
     }
 })
 

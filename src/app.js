@@ -11,7 +11,7 @@ const productsRouter = require("./routes/products.router.js");
 const cartsRouter = require("./routes/carts.router.js");
 
 server.use("/api/products", productsRouter);
-server.use("/api", cartsRouter);
+server.use("/api/carts", cartsRouter);
 
 //Listen
 server.listen(PUERTO, ()=>{
