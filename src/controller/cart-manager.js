@@ -103,7 +103,7 @@ module.exports = class CartManager {
     async deleteCart(idCart){
         try {
             //traigo los productos
-            const updatedCarts = await this.readProducts()
+            const updatedCarts = await this.readCarts()
 
             //Guardo el indice del producto a eliminar
             const index = await updatedCarts.findIndex(cart => cart.id == +idCart)

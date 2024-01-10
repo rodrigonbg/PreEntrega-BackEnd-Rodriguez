@@ -28,30 +28,5 @@
         "quantity": 1
       }
     ]
-  },
-  {
-    "id": 4,
-    "products": [
-      {
-        "id": 5,
-        "quantity": 2
-      },
-      {
-        "id": 6,
-        "quantity": 1
-      },
-      {
-        "id": 11,
-        "quantity": 1
-      },
-      {
-        "id": 110,
-        "quantity": 1
-      }
-    ]
-  },
-  {
-    "id": 4,
-    "products": []
   }
 ]

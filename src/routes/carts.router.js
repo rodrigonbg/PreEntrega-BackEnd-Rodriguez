@@ -1,11 +1,16 @@
 const express = require("express");
 const router = express.Router();
 
-
 //product manager
+const ProductManager = require("../controller/product-manager.js")
+//Cart manager
 const CartManager = require("../controller/cart-manager.js")
-//Instancia de productManager
+
+//Instancia de CartManager
 const manager = new CartManager("./src/models/carrito.json")
+//Instancia de productManager
+const managerProds = new ProductManager("./src/models/productos.json")
+
 //manager.setProducts(manager.products) //Crear el arrchivo json con array vacío
 
 
@@ -67,25 +72,40 @@ router.post("/:cid/products/:pid", async (req, res)=>{
 
         //Me guardo el id del prod
         let pid = parseInt(req.params.pid)
-        
-        //agrego el producto al carrito
-        const resp = await manager.addProductToCart(cid, pid)
-        res.send(resp)
+
+        //Me guardo el producto a agregar
+        const prod = await managerProds.readProductsbyId(pid);
+
+        if (prod){
+            if (prod.status){
+                //agrego el producto al carrito
+                const resp = await manager.addProductToCart(cid, pid)
+                res.send(resp)
+            }else{
+                return res.send(`El status del producto con ID ${pid} es inactivo.`) 
+            }
+        }else{
+            return  res.send(`El priducto de ID ${pid} No existe`)
+        }
 
     } catch (error) {
         res.send(`Error al procesar la solicitud de agregar producto al carrito. ERROR ${error}`)
     }
 })
 
-
-
-/* ----------------------------------------PUT----------------------------------------------- */
-
-
-
-
 /* ----------------------------------------DELETE----------------------------------------------- */
+router.delete("/:cid", async (req, res)=>{
+    try{
+        //Me guardo el id del carrito
+        let cid = parseInt(req.params.cid)
 
+        //Elimino el carrito
+        const resp = await manager.deleteCart(cid)
+        res.send(resp)
+    }catch(error){
+        return res.send(`Error al procesar la solicitud. ERROR ${error}`)
+    }
+})
 
 module.exports = router;
 
